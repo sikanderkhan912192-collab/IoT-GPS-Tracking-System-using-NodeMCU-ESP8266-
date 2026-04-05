@@ -1,0 +1,62 @@
+// Project: IoT GPS Tracker using NodeMCU
+// Author: Self-developed implementation
+// Status: Under testing (hardware pending)
+
+
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+
+// Create GPS object
+TinyGPSPlus gps;
+
+// RX, TX (NodeMCU pins)
+SoftwareSerial gpsSerial(D2, D1);
+
+// Function to display location
+void displayLocation(double lat, double lng) {
+  Serial.println(" Location Update:");
+  
+  Serial.print("Latitude  : ");
+  Serial.println(lat, 6);
+  
+  Serial.print("Longitude : ");
+  Serial.println(lng, 6);
+
+  Serial.print("Map Link  : https://maps.google.com/?q=");
+  Serial.print(lat, 6);
+  Serial.print(",");
+  Serial.println(lng, 6);
+
+  Serial.println("-----------------------------------");
+}
+
+// Function to check GPS validity
+bool isValidGPS() {
+  if (gps.location.isValid()) {
+    return true;
+  } else {
+    Serial.println("Waiting for GPS signal...");
+    return false;
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  gpsSerial.begin(9600);
+
+  Serial.println("🚀 Initializing GPS Tracker...");
+}
+
+void loop() {
+  while (gpsSerial.available()) {
+    char data = gpsSerial.read();
+    gps.encode(data);
+  }
+
+  // Only print when new location is available
+  if (gps.location.isUpdated()) {
+    if (isValidGPS()) {
+      displayLocation(gps.location.lat(), gps.location.lng());
+    }
+  }
+}
