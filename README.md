@@ -36,10 +36,4 @@ Code available in the repository.
 * GSM module for SMS tracking
 * Mobile app support
 
-## 📸 Output Example
 
-https://www.google.com/maps?q=28.xxxx,77.xxxx
-
-## 👨‍💻 Author
-
-Your Name
